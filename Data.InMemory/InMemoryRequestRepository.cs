@@ -7,15 +7,15 @@ namespace Data.InMemory
 {
     public class InMemoryRequestRepository : IRequestRepository
     {
-        // Статический список для хранения данных в памяти (доступен на протяжении жизни приложения)
+       
         private static readonly List<Request> _requests = new List<Request>();
 
-        // Статический счетчик для генерации уникальных ID
+        
         private static int _nextId = 1;
 
         public InMemoryRequestRepository()
         {
-            // Инициализация тестовыми данными (Seeding)
+            
             if (!_requests.Any())
             {
                 _requests.Add(new Request(
@@ -47,7 +47,7 @@ namespace Data.InMemory
 
         public int Add(Request request)
         {
-            // Генерация нового ID (Id) и установка текущей даты
+            
             request.Id = _nextId++;
             request.Date = System.DateTime.Now;
             _requests.Add(request);
@@ -61,7 +61,7 @@ namespace Data.InMemory
 
         public List<Request> GetAll()
         {
-            // Возвращаем отсортированный по дате список
+            
             return _requests.OrderByDescending(r => r.Date).ToList();
         }
 
@@ -72,7 +72,7 @@ namespace Data.InMemory
             if (existingRequest == null)
                 return false;
 
-            // Обновление всех полей существующего объекта
+            
             existingRequest.Date = updatedRequest.Date;
             existingRequest.Tipe = updatedRequest.Tipe;
             existingRequest.Model = updatedRequest.Model;

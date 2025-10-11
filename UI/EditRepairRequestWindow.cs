@@ -1,5 +1,5 @@
 ﻿using System.Windows;
-using Data.Interfaces; // Используем интерфейс
+using Data.Interfaces; 
 using Domain;
 
 namespace UI
@@ -10,7 +10,7 @@ namespace UI
         private readonly IRequestRepository _repository;
         private readonly RequestListWindow _parentListWindow;
 
-        // Обновленный конструктор: принимает родительское окно для обновления списка и репозиторий
+       
         public Window1(RequestListWindow parent, IRequestRepository repository, Request request = null)
         {
             InitializeComponent();
@@ -18,7 +18,7 @@ namespace UI
             _repository = repository;
             _currentRequest = request;
 
-            // Если передан существующий объект - заполняем форму
+           
             if (_currentRequest != null)
             {
                 Title = "Редактирование заявки №" + _currentRequest.Id;
@@ -28,15 +28,15 @@ namespace UI
             {
                 Title = "Добавление новой заявки";
                 dpDateAdded.SelectedDate = DateTime.Now;
-                cmbStatus.SelectedIndex = 0; // Новая заявка
-                // txtNumber.IsEnabled = False теперь в XAML, но устанавливаем текст
+                cmbStatus.SelectedIndex = 0; 
+                
                 txtNumber.Text = "Автоматически";
             }
         }
 
         private void FillFormData()
         {
-            // Id теперь int, поэтому ToString()
+            
             txtNumber.Text = _currentRequest.Id.ToString();
             dpDateAdded.SelectedDate = _currentRequest.Date;
             cmbEquipmentType.Text = _currentRequest.Tipe;
@@ -58,10 +58,10 @@ namespace UI
             {
                 bool isNew = _currentRequest == null;
 
-                // Используем существующий объект для редактирования или создаем новый
+                
                 Request requestToSave = _currentRequest ?? new Request();
 
-                // Заполнение объекта данными из формы
+               
                 requestToSave.Date = dpDateAdded.SelectedDate ?? DateTime.Now;
                 requestToSave.Tipe = cmbEquipmentType.Text;
                 requestToSave.Model = txtEquipmentModel.Text.Trim();
@@ -74,20 +74,20 @@ namespace UI
 
                 if (isNew)
                 {
-                    // Добавление новой заявки (Add генерирует ID)
+                  
                     _repository.Add(requestToSave);
                     MessageBox.Show($"Новая заявка №{requestToSave.Id} успешно добавлена!", "Успех",
                                     MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 else
                 {
-                    // Обновление существующей заявки
+                   
                     _repository.Update(requestToSave);
                     MessageBox.Show($"Заявка №{requestToSave.Id} успешно обновлена!", "Успех",
                                     MessageBoxButton.OK, MessageBoxImage.Information);
                 }
 
-                // Обновляем список в родительском окне (выполнение требования 3.4)
+                
                 _parentListWindow.LoadRequests();
                 this.Close();
             }
@@ -98,11 +98,10 @@ namespace UI
             }
         }
 
-        // Обновленная логика валидации
+        
         private bool ValidateForm()
         {
-            // Проверка txtNumber удалена, т.к. ID генерируется автоматически.
-            // Добавлена проверка ComboBox и многострочных полей
+            
 
             if (string.IsNullOrWhiteSpace(cmbEquipmentType.Text))
             {
