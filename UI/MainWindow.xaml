@@ -46,25 +46,25 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" Background="#34495e" Padding="20">
-            <TextBlock Text="Главное меню управления заявками" 
+        <Border Grid.Row="0">
+            <TextBlock Text="Меню управления заявками" 
                        FontSize="28" FontWeight="Bold" 
-                       HorizontalAlignment="Right" Foreground="White" Margin="0,0,127,0"/>
+                       HorizontalAlignment="Right" Foreground="Black" Margin="0,0,127,0"/>
         </Border>
 
         <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center">
 
-            <Button Content="📋 Список заявок" 
+            <Button Content="Списки заявок" 
                     Style="{StaticResource MainMenuButton}" 
                     Background="#808080"
                     Click="BtnListRequests_Click"/>
 
-            <Button Content="Добавить новую заявку" 
+            <Button Content="Создать заявку" 
                     Style="{StaticResource MainMenuButton}" 
                     Background="#8B00FF" 
                     Click="BtnAddRequest_Click"/>
 
-            <Button Content="📊 Статистика и отчеты" 
+            <Button Content="Статистика" 
                     Style="{StaticResource MainMenuButton}" 
                     Background="#808080" 
                     Click="BtnStatistics_Click"/>

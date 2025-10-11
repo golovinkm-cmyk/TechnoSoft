@@ -1,24 +1,24 @@
 ﻿using System.Windows;
 using Data.Interfaces;
-using Data.InMemory; // для создания экземпляра репозитория
+using Data.InMemory; 
 using Domain;
 
 namespace UI
 {
     public partial class RequestListWindow : Window
     {
-        // Внедрение зависимости через интерфейс
+        
         private readonly IRequestRepository _repository;
 
         public RequestListWindow(IRequestRepository repository)
         {
             InitializeComponent();
             _repository = repository;
-            // Загружаем данные при открытии окна
+           
             LoadRequests();
         }
 
-        // Метод для загрузки/обновления данных в DataGrid
+        
         public void LoadRequests()
         {
             var requests = _repository.GetAll();
@@ -27,7 +27,7 @@ namespace UI
 
         private void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
-            // Открываем форму Window1 для добавления, передавая ссылку на себя и репозиторий
+          
             var addWindow = new Window1(this, _repository);
             addWindow.ShowDialog();
         }
@@ -36,7 +36,7 @@ namespace UI
         {
             if (RequestsDataGrid.SelectedItem is Request selectedRequest)
             {
-                // Открываем форму Window1 для редактирования, передавая объект заявки
+               
                 var editWindow = new Window1(this, _repository, selectedRequest);
                 editWindow.ShowDialog();
             }
@@ -58,7 +58,7 @@ namespace UI
                     if (_repository.Delete(selectedRequest.Id))
                     {
                         MessageBox.Show("Заявка успешно удалена.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                        LoadRequests(); // Обновляем список
+                        LoadRequests(); 
                     }
                     else
                     {
@@ -74,7 +74,7 @@ namespace UI
 
         private void BtnBackToMenu_Click(object sender, RoutedEventArgs e)
         {
-            // Возвращаемся к главному меню
+            
             var mainWindow = new MainWindow();
             mainWindow.Show();
             this.Close();
