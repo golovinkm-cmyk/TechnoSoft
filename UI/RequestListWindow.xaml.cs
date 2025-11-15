@@ -1,24 +1,25 @@
 ﻿using System.Windows;
 using Data.Interfaces;
-using Data.InMemory; 
+using Data.InMemory;
 using Domain;
+using System; // <-- Убедитесь, что это добавлено
 
 namespace UI
 {
     public partial class RequestListWindow : Window
     {
-        
+
         private readonly IRequestRepository _repository;
 
         public RequestListWindow(IRequestRepository repository)
         {
             InitializeComponent();
             _repository = repository;
-           
+
             LoadRequests();
         }
 
-        
+
         public void LoadRequests()
         {
             var requests = _repository.GetAll();
@@ -27,8 +28,13 @@ namespace UI
 
         private void BtnAdd_Click(object sender, RoutedEventArgs e)
         {
-          
-            var addWindow = new Window1(this, _repository);
+            // ИСПРАВЛЕНО: Создаем новую заявку и открываем EditRepairRequestWindow
+            var newRequest = new Request();
+            var addWindow = new EditRepairRequestWindow(_repository, newRequest);
+
+            // Подписываемся на событие, чтобы обновить список после сохранения
+            addWindow.RequestSaved += (s, args) => LoadRequests();
+
             addWindow.ShowDialog();
         }
 
@@ -36,8 +42,13 @@ namespace UI
         {
             if (RequestsDataGrid.SelectedItem is Request selectedRequest)
             {
-               
-                var editWindow = new Window1(this, _repository, selectedRequest);
+
+                // ИСПРАВЛЕНО: Открываем EditRepairRequestWindow с выбранной заявкой
+                var editWindow = new EditRepairRequestWindow(_repository, selectedRequest);
+
+                // Подписываемся на событие, чтобы обновить список после сохранения
+                editWindow.RequestSaved += (s, args) => LoadRequests();
+
                 editWindow.ShowDialog();
             }
             else
@@ -58,7 +69,7 @@ namespace UI
                     if (_repository.Delete(selectedRequest.Id))
                     {
                         MessageBox.Show("Заявка успешно удалена.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-                        LoadRequests(); 
+                        LoadRequests();
                     }
                     else
                     {
@@ -74,7 +85,7 @@ namespace UI
 
         private void BtnBackToMenu_Click(object sender, RoutedEventArgs e)
         {
-            
+
             var mainWindow = new MainWindow();
             mainWindow.Show();
             this.Close();

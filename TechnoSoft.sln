@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36408.4 d17.14
+VisualStudioVersion = 17.14.36408.4
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{6D1938F9-BD4B-40A1-8A2B-DD6136F138F6}"
 EndProject
@@ -10,6 +10,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.InMemory", "Data.InMemory\Data.InMemory.csproj", "{03E23686-ED6B-4286-A7BF-DBE4D526BCDD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Interfaces", "Data.Interfaces\Data.Interfaces.csproj", "{5E06C8EA-D4BD-4143-850E-DE84F493ECCA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{2FDB70A6-08D1-4103-B06A-A4EE7C23DA2A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{5E06C8EA-D4BD-4143-850E-DE84F493ECCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5E06C8EA-D4BD-4143-850E-DE84F493ECCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5E06C8EA-D4BD-4143-850E-DE84F493ECCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FDB70A6-08D1-4103-B06A-A4EE7C23DA2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FDB70A6-08D1-4103-B06A-A4EE7C23DA2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FDB70A6-08D1-4103-B06A-A4EE7C23DA2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FDB70A6-08D1-4103-B06A-A4EE7C23DA2A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

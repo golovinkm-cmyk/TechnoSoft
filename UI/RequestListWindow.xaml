@@ -23,10 +23,6 @@
         <DockPanel Grid.Row="1" Margin="10">
 
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10">
-                <Button Content="➕ Добавить" Click="BtnAdd_Click" 
-                        Background="#27ae60" Foreground="White" 
-                        FontWeight="Bold" Padding="10" Margin="0,0,10,0"/>
-
                 <Button Content="✏️ Редактировать" Click="BtnEdit_Click" 
                         Background="#3498db" Foreground="White" 
                         FontWeight="Bold" Padding="10" Margin="0,0,10,0"/>
@@ -34,7 +30,6 @@
                 <Button Content="🗑️ Удалить" Click="BtnDelete_Click" 
                         Background="#e74c3c" Foreground="White" 
                         FontWeight="Bold" Padding="10" Margin="0,0,10,0"/>
-
                 <Button Content="🔄 Обновить" Click="BtnRefresh_Click" 
                         Background="#808080" Foreground="White" 
                         FontWeight="Bold" Padding="10"/>

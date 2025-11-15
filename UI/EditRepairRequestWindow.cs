@@ -1,160 +1,115 @@
 ﻿using System.Windows;
-using Data.Interfaces; 
+using Data.Interfaces;
 using Domain;
+using System;
+using System.Windows.Controls; // Для ComboBoxItem
 
 namespace UI
 {
-    public partial class Window1 : Window
+    public partial class EditRepairRequestWindow : Window
     {
-        private Request _currentRequest;
         private readonly IRequestRepository _repository;
-        private readonly RequestListWindow _parentListWindow;
+        private readonly Request _request;
+        private readonly bool _isNewRequest;
 
-       
-        public Window1(RequestListWindow parent, IRequestRepository repository, Request request = null)
+        // Событие, которое сообщит главному окну, что мы что-то сохранили
+        public event EventHandler RequestSaved;
+
+        public EditRepairRequestWindow(IRequestRepository repository, Request request)
         {
             InitializeComponent();
-            _parentListWindow = parent;
             _repository = repository;
-            _currentRequest = request;
+            _request = request;
 
-           
-            if (_currentRequest != null)
+            // Проверяем, это новая заявка или редактирование существующей
+            _isNewRequest = (request.Id == 0);
+
+            if (_isNewRequest)
             {
-                Title = "Редактирование заявки №" + _currentRequest.Id;
-                FillFormData();
+                Title = "Новая заявка";
+                // Устанавливаем значения по умолчанию
+                dpDateAdded.SelectedDate = DateTime.Now;
+                cmbStatus.SelectedItem = cmbStatus.Items[0]; // "Новая заявка"
+                txtNumber.Text = "Будет присвоен";
+                txtNumber.IsEnabled = false;
+                dpDateAdded.IsEnabled = false;
             }
             else
             {
-                Title = "Добавление новой заявки";
-                dpDateAdded.SelectedDate = DateTime.Now;
-                cmbStatus.SelectedIndex = 0; 
-                
-                txtNumber.Text = "Автоматически";
+                Title = $"Редактирование заявки №{_request.Id}";
+                LoadRequestData();
+                txtNumber.IsEnabled = false;
+                dpDateAdded.IsEnabled = false;
             }
         }
 
-        private void FillFormData()
+        // Загрузка данных в поля формы
+        private void LoadRequestData()
         {
-            
-            txtNumber.Text = _currentRequest.Id.ToString();
-            dpDateAdded.SelectedDate = _currentRequest.Date;
-            cmbEquipmentType.Text = _currentRequest.Tipe;
-            txtEquipmentModel.Text = _currentRequest.Model;
-            txtProblemDescription.Text = _currentRequest.Description;
-            txtClientFullName.Text = _currentRequest.ClientFullName;
-            txtClientPhone.Text = _currentRequest.ClientPhone;
-            cmbStatus.Text = _currentRequest.Status;
-            txtResponsibleEngineer.Text = _currentRequest.Engineer;
-            txtComments.Text = _currentRequest.Comments;
+            txtNumber.Text = _request.Id.ToString();
+            dpDateAdded.SelectedDate = _request.Date;
+            cmbEquipmentType.Text = _request.Tipe;
+            txtEquipmentModel.Text = _request.Model;
+            txtProblemDescription.Text = _request.Description;
+            txtClientFullName.Text = _request.ClientFullName;
+            txtClientPhone.Text = _request.ClientPhone;
+            cmbStatus.Text = _request.Status;
+            txtResponsibleEngineer.Text = _request.Engineer;
+            txtComments.Text = _request.Comments;
         }
 
+        // Кнопка "Сохранить"
         private void BtnSave_Click(object sender, RoutedEventArgs e)
         {
-            if (!ValidateForm())
+            // Простая валидация (проверка)
+            if (string.IsNullOrWhiteSpace(cmbEquipmentType.Text) ||
+                string.IsNullOrWhiteSpace(txtEquipmentModel.Text) ||
+                string.IsNullOrWhiteSpace(txtProblemDescription.Text) ||
+                string.IsNullOrWhiteSpace(txtClientFullName.Text) ||
+                string.IsNullOrWhiteSpace(txtClientPhone.Text) ||
+                string.IsNullOrWhiteSpace(cmbStatus.Text))
+            {
+                MessageBox.Show("Пожалуйста, заполните все обязательные поля (*).", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
-
-            try
-            {
-                bool isNew = _currentRequest == null;
-
-                
-                Request requestToSave = _currentRequest ?? new Request();
-
-               
-                requestToSave.Date = dpDateAdded.SelectedDate ?? DateTime.Now;
-                requestToSave.Tipe = cmbEquipmentType.Text;
-                requestToSave.Model = txtEquipmentModel.Text.Trim();
-                requestToSave.Description = txtProblemDescription.Text.Trim();
-                requestToSave.ClientFullName = txtClientFullName.Text.Trim();
-                requestToSave.ClientPhone = txtClientPhone.Text.Trim();
-                requestToSave.Status = cmbStatus.Text;
-                requestToSave.Engineer = txtResponsibleEngineer.Text.Trim();
-                requestToSave.Comments = txtComments.Text.Trim();
-
-                if (isNew)
-                {
-                  
-                    _repository.Add(requestToSave);
-                    MessageBox.Show($"Новая заявка №{requestToSave.Id} успешно добавлена!", "Успех",
-                                    MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-                else
-                {
-                   
-                    _repository.Update(requestToSave);
-                    MessageBox.Show($"Заявка №{requestToSave.Id} успешно обновлена!", "Успех",
-                                    MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-
-                
-                _parentListWindow.LoadRequests();
-                this.Close();
             }
-            catch (Exception ex)
+
+            // Переносим данные из полей в наш объект _request
+            _request.Tipe = cmbEquipmentType.Text;
+            _request.Model = txtEquipmentModel.Text;
+            _request.Description = txtProblemDescription.Text;
+            _request.Status = cmbStatus.Text;
+            _request.ClientFullName = txtClientFullName.Text;
+            _request.ClientPhone = txtClientPhone.Text;
+            _request.Engineer = txtResponsibleEngineer.Text;
+            _request.Comments = txtComments.Text;
+
+            // Если заявка новая - добавляем, если старая - обновляем
+            if (_isNewRequest)
             {
-                MessageBox.Show($"Ошибка при сохранении: {ex.Message}", "Ошибка",
-                                 MessageBoxButton.OK, MessageBoxImage.Error);
+                _request.Date = dpDateAdded.SelectedDate ?? DateTime.Now; // Дата уже установлена, но на всякий случай
+                _repository.Add(_request);
             }
+            else
+            {
+                _repository.Update(_request);
+            }
+
+            // Сообщаем главному окну, что мы сохранились
+            RequestSaved?.Invoke(this, EventArgs.Empty);
+            this.Close();
         }
 
-        
-        private bool ValidateForm()
-        {
-            
-
-            if (string.IsNullOrWhiteSpace(cmbEquipmentType.Text))
-            {
-                MessageBox.Show("Выберите тип оборудования", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                cmbEquipmentType.Focus();
-                return false;
-            }
-
-            if (string.IsNullOrWhiteSpace(txtEquipmentModel.Text))
-            {
-                MessageBox.Show("Введите модель оборудования", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                txtEquipmentModel.Focus();
-                return false;
-            }
-
-            if (string.IsNullOrWhiteSpace(txtProblemDescription.Text))
-            {
-                MessageBox.Show("Введите описание проблемы", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                txtProblemDescription.Focus();
-                return false;
-            }
-
-            if (string.IsNullOrWhiteSpace(txtClientFullName.Text))
-            {
-                MessageBox.Show("Введите ФИО клиента", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                txtClientFullName.Focus();
-                return false;
-            }
-
-            if (string.IsNullOrWhiteSpace(txtClientPhone.Text))
-            {
-                MessageBox.Show("Введите номер телефона", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                txtClientPhone.Focus();
-                return false;
-            }
-
-            if (string.IsNullOrWhiteSpace(cmbStatus.Text))
-            {
-                MessageBox.Show("Выберите статус заявки", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
-                cmbStatus.Focus();
-                return false;
-            }
-
-            return true;
-        }
-
+        // Кнопка "Отмена"
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
-            if (MessageBox.Show("Отменить изменения и закрыть форму?", "Подтверждение",
-                                 MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
-            {
-                this.Close();
-            }
+            // Просто закрываем окно без сохранения
+            this.Close();
+
+            // Нужно вернуть пользователя в главное меню, но у нас нет на него ссылки.
+            // Самый простой способ - открыть его заново.
+            // (Логику возврата в меню можно улучшить)
+            var mainWindow = new MainWindow();
+            mainWindow.Show();
         }
     }
 }

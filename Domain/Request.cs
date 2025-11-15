@@ -32,5 +32,9 @@ namespace Domain
             Engineer = engineer;
             Comments = comments;
         }
+
+        public Request()
+        {
+        }
     }
 }
