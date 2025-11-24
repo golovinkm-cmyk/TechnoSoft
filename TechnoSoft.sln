@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Interfaces", "Data.Int
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Services", "Services\Services.csproj", "{2FDB70A6-08D1-4103-B06A-A4EE7C23DA2A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ITService.Data.SqlServer", "ITService.Data.SqlServer\ITService.Data.SqlServer.csproj", "{47E4D69F-8668-4623-B595-8A248AB85CCC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{2FDB70A6-08D1-4103-B06A-A4EE7C23DA2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2FDB70A6-08D1-4103-B06A-A4EE7C23DA2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2FDB70A6-08D1-4103-B06A-A4EE7C23DA2A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47E4D69F-8668-4623-B595-8A248AB85CCC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47E4D69F-8668-4623-B595-8A248AB85CCC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47E4D69F-8668-4623-B595-8A248AB85CCC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47E4D69F-8668-4623-B595-8A248AB85CCC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

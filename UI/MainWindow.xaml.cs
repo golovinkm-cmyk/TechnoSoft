@@ -1,21 +1,33 @@
-﻿using System.Windows;
-using Data.InMemory;
+﻿using Data.InMemory;
 using Data.Interfaces; //
 using Domain;
+using ITService.Data.SqlServer;
+using Microsoft.Extensions.Configuration;
 using Services; //
+using System.IO;
+using System.Windows;
 
 namespace UI
 {
     public partial class MainWindow : Window
     {
-        //
-        //
-        private readonly IRequestRepository _repository = new InMemoryRequestRepository();
+        private readonly IRequestRepository _repository;
 
         public MainWindow()
         {
+            // Получаем репозиторий через Dependency Injection
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.database.json")
+                .Build();
+
+            var factory = new ITServiceDbContextFactory();
+            var context = factory.CreateDbContext(configuration);
+            _repository = new RequestRepository(context);
+
             InitializeComponent();
         }
+        
 
         private void BtnListRequests_Click(object sender, RoutedEventArgs e)
         {
