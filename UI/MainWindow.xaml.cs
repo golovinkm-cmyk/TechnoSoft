@@ -15,7 +15,7 @@ namespace UI
 
         public MainWindow()
         {
-            // Получаем репозиторий через Dependency Injection
+            InitializeComponent();
             var configuration = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.database.json")
@@ -66,5 +66,7 @@ namespace UI
             statsWindow.Show();
             this.Close();
         }
+
+
     }
 }

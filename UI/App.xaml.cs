@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Data.Interfaces;
 using ITService.Data.SqlServer;
 using Domain;
+using System.Linq;
 
 namespace UI
 {
@@ -17,28 +18,41 @@ namespace UI
         {
             base.OnStartup(e);
 
-            // 1. Чтение конфигурации
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.database.json")
-                .Build();
+            try
+            {
+                // 1. Чтение конфигурации
+                var configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("appsettings.database.json")
+                    .Build();
 
-            // 2. Создание DbContext
-            var factory = new ITServiceDbContextFactory();
-            _dbContext = factory.CreateDbContext(configuration);
+                // 2. Создание DbContext
+                var factory = new ITServiceDbContextFactory();
+                _dbContext = factory.CreateDbContext(configuration);
 
-            // 3. Автоматическое применение миграций
-            _dbContext.Database.Migrate();
+                // 3. АВТОМАТИЧЕСКОЕ СОЗДАНИЕ БАЗЫ (без миграций)
+                _dbContext.Database.EnsureCreated();
 
-            // 4. Создание репозиториев
-            _requestRepository = new RequestRepository(_dbContext);
+                // 4. Создание репозиториев
+                _requestRepository = new RequestRepository(_dbContext);
 
-            // 5. Заполнение тестовыми данными (если БД пустая)
-            SeedInitData();
+                // 5. Заполнение тестовыми данными (если БД пустая)
+                SeedInitData();
 
-            // 6. Запуск главного окна
-            var mainWindow = new MainWindow();
-            mainWindow.Show();
+                // 6. Запуск главного окна
+                var mainWindow = new MainWindow();
+                mainWindow.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при создании базы данных: {ex.Message}\n\nПриложение будет использовать временное хранилище.",
+                    "Ошибка БД", MessageBoxButton.OK, MessageBoxImage.Warning);
+
+                // Fallback на InMemory репозиторий
+                var inMemoryRepo = new Data.InMemory.InMemoryRequestRepository();
+                var mainWindow = new MainWindow();
+                mainWindow.Show();
+            }
         }
 
         private void SeedInitData()
@@ -51,7 +65,7 @@ namespace UI
 
             // Добавляем тестовые данные
             var testRequest = new Request(
-                id: 1,
+                id: 0, // EF Core сам назначит ID
                 date: DateTime.Now,
                 tipe: "Компьютер",
                 model: "Dell OptiPlex 7010",

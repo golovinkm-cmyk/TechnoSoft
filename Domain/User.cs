@@ -2,8 +2,13 @@
 {
     public class User
     {
-        public string FIO;
-        public string Phone_Number;
+        public string FIO { get; set; } = string.Empty;
+        public string Phone_Number { get; set; } = string.Empty;
+
+
+        public User()
+        {
+        }
 
         public User(string fio, string phone_number)
         {

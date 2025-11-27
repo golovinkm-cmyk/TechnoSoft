@@ -3,7 +3,7 @@ using Domain;
 
 namespace ITService.Data.SqlServer
 {
-    public class ITServiceDbContext : DbContext  
+    public class ITServiceDbContext : DbContext
     {
         public ITServiceDbContext(DbContextOptions<ITServiceDbContext> options) : base(options)
         {
@@ -27,6 +27,7 @@ namespace ITService.Data.SqlServer
                 entity.Property(r => r.ClientFullName).IsRequired().HasMaxLength(200);
                 entity.Property(r => r.ClientPhone).IsRequired().HasMaxLength(20);
                 entity.Property(r => r.Engineer).HasMaxLength(100);
+                entity.Property(r => r.Comments);
             });
 
             // Настройка сущности User
