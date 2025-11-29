@@ -102,14 +102,12 @@ namespace UI
         // Кнопка "Отмена"
         private void BtnCancel_Click(object sender, RoutedEventArgs e)
         {
-            // Просто закрываем окно без сохранения
+            
             this.Close();
 
-            // Нужно вернуть пользователя в главное меню, но у нас нет на него ссылки.
-            // Самый простой способ - открыть его заново.
-            // (Логику возврата в меню можно улучшить)
-            var mainWindow = new MainWindow();
-            mainWindow.Show();
+           
         }
+        
+       
     }
 }

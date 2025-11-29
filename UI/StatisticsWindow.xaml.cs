@@ -130,8 +130,7 @@ namespace UI
 
         private void BtnBackToMenu_Click(object sender, RoutedEventArgs e)
         {
-            var mainWindow = new MainWindow();
-            mainWindow.Show();
+            
             this.Close();
         }
 

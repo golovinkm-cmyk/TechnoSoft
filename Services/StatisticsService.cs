@@ -4,6 +4,30 @@ using System.Linq;
 
 namespace Services
 {
+
+    public class StatusStatisticItem
+    {
+        public string Status { get; set; } = string.Empty;
+        public int Count { get; set; }
+    }
+
+    public class MonthStatisticItem
+    {
+        public int Year { get; set; }
+        public int Month { get; set; }
+        public int Count { get; set; }
+
+        public string GetMonthName()
+        {
+            return new DateTime(Year, Month, 1).ToString("MMMM yyyy");
+        }
+    }
+
+    public class EngineerStatisticItem
+    {
+        public string EngineerName { get; set; } = string.Empty;
+        public int Count { get; set; }
+    }
     public class StatisticsService
     {
         private readonly IRequestRepository _requestRepository;
@@ -18,7 +42,7 @@ namespace Services
         {
             var requests = _requestRepository.GetAll(filter);
             return requests
-                .GroupBy(r => r.Status) //
+                .GroupBy(r => r.Status) 
                 .Select(g => new StatusStatisticItem
                 {
                     Status = g.Key,

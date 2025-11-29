@@ -10,13 +10,12 @@ namespace ITService.Data.SqlServer
 {
     internal class DataBase
     {
-        
-        
-            /// Объявление строки подключения с БД
-            SqlConnection sqlConnection = new SqlConnection(@"Server=Dbsrv\GOR2025;Database=ITServiceRepairDB;Trusted_Connection=true;MultipleActiveResultSets=true;TrustServerCertificate=true;encr
-      ypt=false");
-            /// Метод для открытия соединения с БД
-            public void OpenConnection()
+
+
+        /// Объявление строки подключения с БД
+        SqlConnection sqlConnection = new SqlConnection(@"Server=Dbsrv\GOR2025;Database=ITServiceRepairDB;Trusted_Connection=true;MultipleActiveResultSets=true;TrustServerCertificate=true;");
+        /// Метод для открытия соединения с БД
+        public void OpenConnection()
             {
                 // если состояние строки закрыто, то открываем
                 if (sqlConnection.State == System.Data.ConnectionState.Closed)

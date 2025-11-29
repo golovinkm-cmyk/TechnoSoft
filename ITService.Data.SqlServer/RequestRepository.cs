@@ -1,85 +1,80 @@
 ﻿using Data.Interfaces;
+using Data.Interfaces;
 using Domain;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
-using System.Linq;
 
-namespace ITService.Data.SqlServer
+namespace RepairService.Data.SqlServer;
+
+public class RequestRepository : IRequestRepository
 {
-    public class RequestRepository : IRequestRepository
+    private readonly RepairServiceDbContext _context;
+
+    public RequestRepository(RepairServiceDbContext context)
     {
-        private readonly ITServiceDbContext _context;
+        _context = context;
+    }
 
-        public RequestRepository(ITServiceDbContext context)
+    public int Add(Request request)
+    {
+        _context.Requests.Add(request);
+        _context.SaveChanges();
+        return request.Id;
+    }
+
+    public Request GetById(int id)
+    {
+        return _context.Requests.Find(id);
+    }
+
+    public List<Request> GetAll()
+    {
+        return GetAll(RequestFilter.Empty);
+    }
+
+    public List<Request> GetAll(RequestFilter filter)
+    {
+        var query = _context.Requests.AsQueryable();
+
+        if (filter.StartDate.HasValue)
         {
-            _context = context;
+            query = query.Where(x => x.Date >= filter.StartDate.Value);
+        }
+        if (filter.EndDate.HasValue)
+        {
+            query = query.Where(x => x.Date <= filter.EndDate.Value);
         }
 
-        public int Add(Request request)
-        {
-            _context.Requests.Add(request);
-            _context.SaveChanges();
-            return request.Id;
-        }
+        return query.OrderByDescending(r => r.Date).ToList();
+    }
 
-        public Request GetById(int id)
-        {
-            return _context.Requests.Find(id);
-        }
+    public bool Update(Request request)
+    {
+        var existing = _context.Requests.Find(request.Id);
+        if (existing == null)
+            return false;
 
-        public List<Request> GetAll()
-        {
-            return _context.Requests
-                .OrderByDescending(r => r.Date)
-                .ToList();
-        }
+        // Копируем свойства
+        existing.Date = request.Date;
+        existing.Tipe = request.Tipe;
+        existing.Model = request.Model;
+        existing.Description = request.Description;
+        existing.Status = request.Status;
+        existing.ClientFullName = request.ClientFullName;
+        existing.ClientPhone = request.ClientPhone;
+        existing.Engineer = request.Engineer;
+        existing.Comments = request.Comments;
 
-        public List<Request> GetAll(RequestFilter filter)
-        {
-            var query = _context.Requests.AsQueryable();
+        _context.SaveChanges();
+        return true;
+    }
 
-            if (filter.StartDate.HasValue)
-            {
-                query = query.Where(x => x.Date.Date >= filter.StartDate.Value.Date);
-            }
-            if (filter.EndDate.HasValue)
-            {
-                query = query.Where(x => x.Date.Date <= filter.EndDate.Value.Date);
-            }
+    public bool Delete(int id)
+    {
+        var request = _context.Requests.Find(id);
+        if (request == null)
+            return false;
 
-            return query.OrderByDescending(r => r.Date).ToList();
-        }
-
-        public bool Update(Request updatedRequest)
-        {
-            var existingRequest = _context.Requests.Find(updatedRequest.Id);
-            if (existingRequest == null)
-                return false;
-
-            // Обновляем свойства
-            existingRequest.Date = updatedRequest.Date;
-            existingRequest.Tipe = updatedRequest.Tipe;
-            existingRequest.Model = updatedRequest.Model;
-            existingRequest.Description = updatedRequest.Description;
-            existingRequest.Status = updatedRequest.Status;
-            existingRequest.ClientFullName = updatedRequest.ClientFullName;
-            existingRequest.ClientPhone = updatedRequest.ClientPhone;
-            existingRequest.Engineer = updatedRequest.Engineer;
-            existingRequest.Comments = updatedRequest.Comments;
-
-            _context.SaveChanges();
-            return true;
-        }
-
-        public bool Delete(int id)
-        {
-            var request = _context.Requests.Find(id);
-            if (request == null)
-                return false;
-
-            _context.Requests.Remove(request);
-            _context.SaveChanges();
-            return true;
-        }
+        _context.Requests.Remove(request);
+        _context.SaveChanges();
+        return true;
     }
 }

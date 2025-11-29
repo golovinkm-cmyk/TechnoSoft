@@ -1,9 +1,9 @@
 ﻿using Data.InMemory;
-using Data.Interfaces; //
+using Data.Interfaces; 
 using Domain;
 using ITService.Data.SqlServer;
 using Microsoft.Extensions.Configuration;
-using Services; //
+using Services; 
 using System.IO;
 using System.Windows;
 
@@ -13,21 +13,11 @@ namespace UI
     {
         private readonly IRequestRepository _repository;
 
-        public MainWindow()
+        public MainWindow(IRequestRepository repository)
         {
             InitializeComponent();
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.database.json")
-                .Build();
-
-            var factory = new ITServiceDbContextFactory();
-            var context = factory.CreateDbContext(configuration);
-            _repository = new RequestRepository(context);
-
-            InitializeComponent();
+            _repository = repository;
         }
-        
 
         private void BtnListRequests_Click(object sender, RoutedEventArgs e)
         {

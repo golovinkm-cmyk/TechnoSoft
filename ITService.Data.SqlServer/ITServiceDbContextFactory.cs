@@ -1,31 +1,29 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
-using System.IO;
 
-namespace ITService.Data.SqlServer
+namespace RepairService.Data.SqlServer;
+
+public class RepairServiceDbContextFactory : IDesignTimeDbContextFactory<RepairServiceDbContext>
 {
-    public class ITServiceDbContextFactory : IDesignTimeDbContextFactory<ITServiceDbContext>
+    public RepairServiceDbContext CreateDbContext(string[] args)
     {
-        public ITServiceDbContext CreateDbContext(string[] args)
-        {
-            var configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.database.json")
-                .Build();
+        var configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.database.json")
+            .Build();
 
-            return CreateDbContext(configuration);
-        }
+        return CreateDbContext(configuration);
+    }
 
-        // Добавлен отдельный метод для использования в UI
-        public ITServiceDbContext CreateDbContext(IConfiguration configuration)
-        {
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+    public RepairServiceDbContext CreateDbContext(IConfiguration configuration)
+    {
+        var connectionString = configuration.GetConnectionString("DefaultConnection");
 
-            var optionsBuilder = new DbContextOptionsBuilder<ITServiceDbContext>();
-            optionsBuilder.UseSqlServer(connectionString);
+        var optionsBuilder = new DbContextOptionsBuilder<RepairServiceDbContext>();
+        optionsBuilder.UseSqlServer(connectionString);
 
-            return new ITServiceDbContext(optionsBuilder.Options);
-        }
+
+        return new RepairServiceDbContext(optionsBuilder.Options);
     }
 }
